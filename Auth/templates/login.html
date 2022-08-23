@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block content %}
+<div class="container text-white p-5 big-border transparent">
+    <h2 class="mb-3"><strong>Login</strong></h2>
+    
+    <form action="/login" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password">
+        </div>
+        <button class="btn btn-warning mb-3" type="submit">Login</button>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="container w-50">
+                    <div class="alert alert-danger">
+                        <strong>{{ messages[0] }}</strong>
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
+        <br>
+        Don't have an account? Go to <a class="text-warning" href="/register">Create Account</a>.
+    </form>
+</div>
+{% endblock %}

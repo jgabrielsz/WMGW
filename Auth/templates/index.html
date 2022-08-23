@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="container w-50">
+                    <div class="alert alert-success aligh-items-center">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="container text-white">
+        You're logged in
+        <a class="text-warning" href="/logout">Log Out</a>
+    </div>
+{% endblock %}
+
