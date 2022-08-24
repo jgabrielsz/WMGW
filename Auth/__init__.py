@@ -2,26 +2,13 @@ from flask import Blueprint, render_template, request, redirect, session, url_fo
 from utils import *
 import sqlite3
 
-auth_bp = Blueprint('auth', __name__, template_folder='templates', static_folder='static', static_url_path='/static/admin')
+auth_bp = Blueprint('auth', __name__, template_folder='templates', static_folder='.static')
 
 # Connect to the database
 connection = sqlite3.connect('./database.db')
 db = connection.cursor()
 
 
-# Homepage
-@auth_bp.route('/')
-def index():
-    """
-    Render the homepage of the site
-    """
-
-    # If the user is not logged in redirect to login
-    if session.get('id') is None:
-        return redirect('/login')
-
-    # If the user is logged in show the homepage
-    return render_template('index.html')
 
 # register page
 @auth_bp.route('/register', methods=['GET', 'POST'])
