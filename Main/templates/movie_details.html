@@ -1,0 +1,14 @@
+{% extends 'base_home.html' %}
+
+{% block title %}
+    Movie Details
+{% endblock %}
+
+{% block content %}
+        <h2 class="categorie">MOVIE DETAILS</h2>
+        {% if movie %}
+            {% for key in movie %}
+                <h2 class="h-2 text-warning ">{{key}}: {{movie[key]}}</h2>
+            {% endfor %}        
+        {% endif %}
+{% endblock %}

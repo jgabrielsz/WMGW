@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, session, url_for, flash
-from utils import *
+from flask import Blueprint, render_template, redirect, session
+from Auth.login_utils import *
 import sqlite3
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates', static_folder='.static')
@@ -7,7 +7,6 @@ auth_bp = Blueprint('auth', __name__, template_folder='templates', static_folder
 # Connect to the database
 connection = sqlite3.connect('./database.db')
 db = connection.cursor()
-
 
 
 # register page
@@ -35,18 +34,19 @@ def register():
         # Insert into database only if the user not exists yet
         if not name_in_database(name):
             if insert_user(name, password):
-                id = login_user(name, password)
-                session['id'] = id
+                id_ = login_user(name, password)
+                session['id'] = id_
                 flash('Account created successfully')
                 return redirect('/')
             flash('Error')
             return redirect('/register')
-        
+
         # When the name is already in the database
         flash('Username already exists')
         return redirect('/register')
 
     return render_template('register.html')
+
 
 # login page
 @auth_bp.route('/login', methods=['GET', 'POST'])
@@ -58,20 +58,20 @@ def login():
         # Get the name and the password of the user
         name = request_username()
         password = request_pass('password')
-        
+
         # if one of the data is none return an error
         if name is None or password is None:
             return redirect('/login')
-        
+
         # If the user exists
         if name_in_database(name):
             # Get the id of the user
-            id = login_user(name, password)
-            if id:
-                session['id'] = id
+            user_id = login_user(name, password)
+            if user_id:
+                session['id'] = user_id
                 flash('Successfully logged in')
                 return redirect('/')
-            
+
             flash("Incorrect Password")
             return redirect('/login')
 
@@ -79,6 +79,7 @@ def login():
         return redirect('/login')
 
     return render_template('login.html')
+
 
 # logout page
 @auth_bp.route('/logout')

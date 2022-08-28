@@ -5,21 +5,43 @@
 {% endblock %}
 
 {% block content %}
+
+    <!-- Success Login Message  -->
     {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <div class="container w-50">
-                    <div class="alert alert-success aligh-items-center">
-                        {{ message }}
-                    </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="container w-50">
+                <div class="alert alert-success aligh-items-center">
+                    {{ message }}
                 </div>
-            {% endfor %}
-        {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
     {% endwith %}
-    
-    <div class="container text-white">
-        You're logged in
-        <a class="text-primary" href="/logout">Log Out</a>
-    </div>
+
+    {% if content %}
+        {% for key in content %}
+            <h2 class="categorie">{{key}}</h2>
+            <div class="container-movies">
+                {% for movie in content[key] %}
+                <div class="poster">
+                    <div class="title">{{movie['title']}}</div>
+                </div>
+                {% endfor %}
+                <button class="show-more-btn">Show <br> More</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+    <!-- <h2 class="categorie"></h2>
+    <div class="container-movies">
+        <div class="poster">
+            <div class="title">
+            </div>
+        </div>
+        <button class="show-more-btn">Show <br> More</button>
+    </div> -->
+
 {% endblock %}
 

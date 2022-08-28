@@ -9,9 +9,9 @@ def request_username():
     Parameters: None \n
     Return: username if there is no error, and None for errors
     """
-    username =  request.form.get('username')
+    username = request.form.get('username')
     answer = []
-    
+
     if not username or username.isspace() or username is None:
         answer.append('Username is required')
     elif ' ' in username:
@@ -24,11 +24,12 @@ def request_username():
         answer.append('Username must contain only alphanumeric characters')
     elif not username[0].isalpha():
         answer.append('Username must start with an alphabetic character')
-    
+
     if len(answer) > 0:
         flash(answer[0].capitalize())
         return None
     return username
+
 
 def request_pass(passwd):
     """
@@ -38,7 +39,7 @@ def request_pass(passwd):
     """
     password = request.form.get(passwd)
     answer = []
-    
+
     if not password or password.isspace() or password is None:
         answer.append(f'{passwd} is required')
     elif ' ' in password:
@@ -50,6 +51,7 @@ def request_pass(passwd):
         flash(answer[0].capitalize())
         return None
     return password
+
 
 def name_in_database(name):
     """
@@ -63,10 +65,11 @@ def name_in_database(name):
     connection.commit()
     resp = db.fetchall()
     connection.close()
-    
+
     if len(resp) == 0:
         return False
     return True
+
 
 def insert_user(name, password):
     """
@@ -82,10 +85,11 @@ def insert_user(name, password):
     db.execute("INSERT INTO users(name, hash) VALUES (?, ?)", [name, generate_password_hash(password)])
     connection.commit()
     connection.close()
-    
+
     if name_in_database(name):
         return True
     return False
+
 
 def delete_user(name):
     """
@@ -104,6 +108,7 @@ def delete_user(name):
         return False
     return False
 
+
 def login_user(name, password):
     """
     Function to return the id of the user \n
@@ -115,16 +120,15 @@ def login_user(name, password):
         db = connection.cursor()
         db.execute("SELECT id, hash FROM users WHERE name = ?", [name])
         connection.commit()
-        hash = db.fetchall()
+        password_hash = db.fetchall()
         connection.close()
 
-        #Return the id only if the passwords match
-        if check_password_hash(hash[0][1], password):
-            return hash[0][0]
+        # Return the id only if the passwords match
+        if check_password_hash(password_hash[0][1], password):
+            return password_hash[0][0]
     # When the password is incorrect
     return 0
 
-
-# To run tests durring the development
+# To run tests during the development
 if __name__ == "__main__":
     pass

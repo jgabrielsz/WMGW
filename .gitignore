@@ -1,2 +1,7 @@
 
 database.db
+__pycache__/login_utils.cpython-310.pyc
+__pycache__/utils.cpython-310.pyc
+Auth/__pycache__/__init__.cpython-310.pyc
+Auth/__pycache__/login_utils.cpython-310.pyc
+Main/__pycache__/__init__.cpython-310.pyc
