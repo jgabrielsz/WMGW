@@ -11,3 +11,4 @@ flask_session/ca2aeb48e4f72f922ae7b110502d1545
 static/newposters
 static/posters
 Main/__pycache__/data_utils.cpython-310.pyc
+*.pyc
