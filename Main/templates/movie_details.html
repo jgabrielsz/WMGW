@@ -5,10 +5,43 @@
 {% endblock %}
 
 {% block content %}
-        <h2 class="categorie">MOVIE DETAILS</h2>
-        {% if movie %}
-            {% for key in movie %}
-                <h2 class="h-2 text-warning ">{{key}}: {{movie[key]}}</h2>
-            {% endfor %}        
-        {% endif %}
+        <div id="container-details" class="container text-center text-white p-5 big-border transparent">
+            
+            <h2 class="categorie pb-3">Movie Details</h2>
+            <div class="row">
+                <span class="col-1"></span>
+                <div class="container text-center col-5">
+                    <div class="poster_big">
+                        <img src="../../static/posters/{{movie['id']}}.jpg" alt="Poster">
+                    </div>
+                </div>
+                <div class="container p-5 col-6">
+                    <h5 class="details">Movie Title: {{ movie['title']}}</h5>
+                    <h5 class="details">Release Year: {{ movie['year']}}</h5>
+                    <h5 class="details">Genres: {{ movie['genres']}}</h5>
+                    <span class="px-3"></span>
+                    <div class="details text-center justify-content-evenly  ">
+                        <div class="details">Movie Details: <br> {{ movie['title']}}</div>
+                        <div class="details">Release Year: <br> {{ movie['year']}}</div>
+                    </div>
+                    <div class="redeable text-start">
+                        <br>
+                        <div class="details pb-2">
+                                Also In The Movie:
+                        </div>
+                        <div class="people">
+                            {% for person in movie['people'] %}
+                                <a href="https://www.imdb.com/name/{{person[0]}}">{{person[1]}} <br></a>    
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- {% if movie %}
+                {% for key in movie %}
+                    <h2 class="h-4 text-warning ">{{key}}: {{movie[key]}}</h2>
+                {% endfor %}        
+            {% endif %} -->
+        </div>
 {% endblock %}

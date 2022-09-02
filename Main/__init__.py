@@ -1,3 +1,4 @@
+from cgi import print_environ
 from urllib import request
 from flask import Blueprint, render_template, redirect, session, request
 from Main.data_utils import *
@@ -16,6 +17,7 @@ def home():
         return redirect('/login')
 
     content = {
+        'Previous Movies': get_movies(10),
         'Movies Released in This Year': movies_per_year(2022, 10),
         'Next Year Movies': movies_per_year(2023, 10),
     }
@@ -28,5 +30,7 @@ def home():
 @main_bp.route('/movie')
 def details():
     movie_id = request.args.get('id')
-    movi = movie_details(movie_id)
-    return render_template('movie_details.html', movie=movi)
+    movie_data = movie_details(movie_id)
+
+    return render_template('movie_details.html', movie=movie_data)
+

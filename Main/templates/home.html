@@ -19,14 +19,17 @@
     {% endif %}
     {% endwith %}
 
+
+    <!-- Categories movies -->
     {% if content %}
         {% for key in content %}
-            <h2 class="categorie">{{key}}</h2>
+            <h2 class="categorie text-start">{{key}}</h2>
             <div class="container-movies">
                 {% for movie in content[key] %}
-                <div class="poster">
+                <a href="/movie?id={{movie['id']}}" class="poster">
+                    <img class="poster-img" src="../../static/posters/{{movie['id']}}.jpg" alt="">
                     <div class="title">{{movie['title']}}</div>
-                </div>
+                </a>
                 {% endfor %}
                 <button class="show-more-btn">Show <br> More</button>
             </div>
