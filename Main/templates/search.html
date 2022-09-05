@@ -1,0 +1,48 @@
+{% extends 'base_home.html' %}
+
+{% block content %}
+    {% if movies %}
+        {% for movie in movies %}
+            <a href="/movie?id={{movie['id']}}" class="search-link">
+                <div class="container big-border transparent mb-2 box-search">
+                    {% if movie['poster'] %}
+                        <img src="../../static/posters/{{movie['id']}}.jpg" alt="Poster">
+                    {% else %}
+                        <img src="../../static/poster_not_found.jpg" alt="Poster">
+                    {% endif %}
+                    <div class="data-all">
+                        <div>{{movie['title']}}</div>
+                        <div>{{movie['year']}}</div>
+                        {% if movie['genres'] != '/N' %}
+                            <div>{{movie['genres']}}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+
+        {% endfor %}
+        <div class="container paginator">
+            {% if part != 1 %}
+                <form action="/search" method="get">
+                    <input type="hidden" name="search" value="{{search}}">
+                    <input type="hidden" name="part" value="{{part-1}}">
+                    <button class="btn btn-warning" type="submit"><strong>&#60;</strong></button>
+                </form>
+            {% endif %}
+    
+            <span class="text-warning px-2"><strong>Page {{part}} of {{max}}</strong></span>
+            
+            {% if part != max %}
+                <form action="/search" method="get">
+                    <input type="hidden" name="search" value="{{search}}">
+                    <input type="hidden" name="part" value="{{part+1}}">
+                    <button class="btn btn-warning" type="submit"><strong>&#62;</strong></button>
+                </form>     
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="categorie">No results for your search</div>
+    {% endif %}
+{% endblock %}
+
+

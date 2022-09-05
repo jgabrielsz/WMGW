@@ -19,7 +19,6 @@
     {% endif %}
     {% endwith %}
 
-
     <!-- Categories movies -->
     {% if content %}
         {% for key in content %}
@@ -31,20 +30,10 @@
                     <div class="title">{{movie['title']}}</div>
                 </a>
                 {% endfor %}
-                <button class="show-more-btn">Show <br> More</button>
+                <a class="show-more-btn" href="/show_more?categorie={{key}}&part=1">Show<br>More</a>
             </div>
         {% endfor %}
     {% endif %}
-
-
-    <!-- <h2 class="categorie"></h2>
-    <div class="container-movies">
-        <div class="poster">
-            <div class="title">
-            </div>
-        </div>
-        <button class="show-more-btn">Show <br> More</button>
-    </div> -->
-
+    
 {% endblock %}
 

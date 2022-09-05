@@ -12,7 +12,12 @@
                 <span class="col-1"></span>
                 <div class="container text-center col-5">
                     <div class="poster_big">
+                        <!-- <img src="../../static/posters/{{movie['id']}}.jpg" alt="Poster"> -->
+                        {% if movie['poster'] %}
                         <img src="../../static/posters/{{movie['id']}}.jpg" alt="Poster">
+                        {% else %}
+                            <img src="../../static/poster_not_found.jpg" alt="Poster">
+                        {% endif %}
                     </div>
                 </div>
                 <div class="container p-5 col-6">
@@ -37,11 +42,5 @@
                     </div>
                 </div>
             </div>
-
-            <!-- {% if movie %}
-                {% for key in movie %}
-                    <h2 class="h-4 text-warning ">{{key}}: {{movie[key]}}</h2>
-                {% endfor %}        
-            {% endif %} -->
         </div>
 {% endblock %}
