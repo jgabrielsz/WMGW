@@ -5,11 +5,7 @@
         {% for movie in movies %}
             <a href="/movie?id={{movie['id']}}" class="search-link">
                 <div class="container big-border transparent mb-2 box-search">
-                    {% if movie['poster'] %}
-                        <img src="../../static/posters/{{movie['id']}}.jpg" alt="Poster">
-                    {% else %}
-                        <img src="../../static/poster_not_found.jpg" alt="Poster">
-                    {% endif %}
+                    <img src="../../static/posters/{{movie['id']}}.jpg" onerror="this.onerror=null; this.src='../../static/poster_not_found.jpg'" alt="Poster">
                     <div class="data-all">
                         <div>{{movie['title']}}</div>
                         <div>{{movie['year']}}</div>

@@ -11,7 +11,7 @@
     {% if messages %}
         {% for message in messages %}
             <div class="container w-50">
-                <div class="alert alert-success aligh-items-center">
+                <div class="alert_success">
                     {{ message }}
                 </div>
             </div>
@@ -26,12 +26,13 @@
             <div class="container-movies">
                 {% for movie in content[key] %}
                 <a href="/movie?id={{movie['id']}}" class="poster">
-                    <img class="poster-img" src="../../static/posters/{{movie['id']}}.jpg" alt="">
+                    <img class="poster-img" src="../../static/posters/{{movie['id']}}.jpg" onerror="this.onerror=null; this.src='../../static/poster_not_found.jpg'" alt="">
                     <div class="title">{{movie['title']}}</div>
                 </a>
                 {% endfor %}
                 <a class="show-more-btn" href="/show_more?categorie={{key}}&part=1">Show<br>More</a>
             </div>
+            <br>
         {% endfor %}
     {% endif %}
     

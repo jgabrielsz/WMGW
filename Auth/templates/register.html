@@ -18,18 +18,18 @@
             <div class="mb-3">
                 <input class="form-control mx-auto w-auto" name="password_confirm" placeholder="Confirm Password" type="password">
             </div>
+            <button class="btn btn-warning" type="submit">Create Account</button>
+            <br>
+            <br>
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     <div class="container w-50">
-                        <div class="alert alert-danger">
+                        <div class="alert_danger">
                             <strong>{{ messages[0] }}</strong>
                         </div>
                     </div>
                 {% endif %}
             {% endwith %}
-            <button class="btn btn-warning" type="submit">Create Account</button>
-            <br>
-            <br>
             Already have an account? Go to <a class="text-warning" href="/login">Log In</a>.
         </form>
     </div>

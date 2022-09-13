@@ -1,7 +1,106 @@
 import sqlite3
 import movieposters as mp
 from math import ceil
-from os.path import exists
+import imdb
+from time import time
+
+ia = imdb.IMDb()
+
+
+def movie_details_less(id):
+    """
+    Get the movie data(just id, title and poster bool) \n
+    Parameters: id: string \n
+    Return a dict with the data
+    """
+    # Movies data
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute('SELECT id,title FROM movies WHERE id = (?)', (id, ))
+    connection.commit()
+    movie_data = db.fetchall()
+    connection.close()
+
+
+    if movie_data:
+        return {
+            'id': movie_data[0][0],
+            'title': movie_data[0][1]
+        }
+
+
+def movie_details(id):
+    """
+    Get the movie data(id, title, year, genres and posters)
+    Parameters: id: string
+    Return a dict with the data
+    """
+    # Movies data
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute('SELECT id,title,year,genres FROM movies WHERE id = (?)', (id, ))
+    connection.commit()
+    movie_data = db.fetchall()
+    connection.close()
+
+
+    if movie_data:
+        movie = {
+            'id': movie_data[0][0],
+            'title': movie_data[0][1],
+            'year': movie_data[0][2],
+            'genres': movie_data[0][3]
+        }
+
+        if movie['genres'] == r"\N":
+            movie['genres'] = ''
+
+        return movie
+        
+    return False
+
+
+def movie_details_more(id):
+    """
+    Get the movie data (id, title, year, genres, poster, directors, writers, people)
+    Parameters: id: string
+    Return a dict with the data
+    """
+    # Get some movie data
+    movie_data = movie_details(id)
+
+    #directors and writers
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute('SELECT directors, writers FROM producers WHERE id = ?', (id, ))
+    connection.commit()
+    directors_writers_ids = db.fetchall()
+    
+    directors = person_details(directors_writers_ids[0][0])
+    writers = person_details(directors_writers_ids[0][1])
+
+    #If there is just one director or one writer put inside a list
+    if type(directors) != list:
+        directors = [directors]    
+    if type(writers) != list:
+        writers = [writers]
+
+    if movie_data:
+        movie = movie_data.copy()
+        
+        try:
+            m_id = movie['id'][2:]
+            plot = ia.get_movie(m_id)
+            movie['plot'] = plot['plot']
+        except:
+            movie['plot'] = ''
+
+        movie['directors'] = directors
+        movie['writers'] = writers
+        
+        
+        return movie
+    return False
 
 
 def person_details(id):
@@ -38,31 +137,31 @@ def person_details(id):
 
 def get_movies(number: int):
     """
-    Get movies data from the database
-    Parameters: number: int
+    Get movies data from the database \n
+    Parameters: number: int \n
     Return: List of dicts if success, False if not
     """
     number = str(number)
     if int(number) > 0:
         connection = sqlite3.connect('database.db')
         db = connection.cursor()
-        db.execute('SELECT * FROM movies LIMIT (?)', (number, ))
+        db.execute('SELECT id FROM movies LIMIT (?)', (number, ))
         connection.commit()
         bigdata = db.fetchall()
         connection.close()
         data_movies = list()
 
         for data in bigdata:
-            data_movies.append({'id': data[0], 'title': data[1], 'year': data[2], 'genres': data[3]})
+            data_movies.append(movie_details_less(data[0]))
 
         if data_movies:
             return data_movies
     return False
 
 
-def movies_per_year(year, number):
+def movies_per_year(year=2022, number=10):
     """
-    Get movies data from the database by year of release
+    Get movies data from the database by year of release, default is 2022
     Parameters: year: int, number: int
     Return: List of dicts if success, False if not
     """
@@ -78,91 +177,15 @@ def movies_per_year(year, number):
         data_movies = list()
 
         for data in bigdata:
-            data_movies.append({'id': data[0], 'title': data[1], 'genres': data[3]})
+            data_movies.append(movie_details_less(data[0]))
 
         if data_movies:
             return data_movies
     return False
 
 
-def movie_details_less(id):
-    """
-    Get the movie data(less)
-    Parameters: id: string
-    Return a dict with the data
-    """
-    # Movies data
-    connection = sqlite3.connect('database.db')
-    db = connection.cursor()
-    db.execute('SELECT * FROM movies WHERE id = (?)', (id, ))
-    connection.commit()
-    movie_data = db.fetchall()
-    connection.close()
-
-
-    if movie_data:
-        movie = {
-            'id': movie_data[0][0],
-            'title': movie_data[0][1],
-            'year': movie_data[0][2],
-            'genres': movie_data[0][3]
-        }
-        if exists(f'/home/gabriel/Documents/Final project/static/posters/{movie["id"]}.jpg'):
-            movie['poster'] = True
-        else:
-            movie['poster'] = False
-
-        if movie['genres'] == r"\N":
-            movie['genres'] = ''
-
-        return movie
-        
-    return False
-
-
-def movie_details(id):
-    """
-    Get the movie data
-    Parameters: id: string
-    Return a dict with the data
-    """
-    # Movies data
-    connection = sqlite3.connect('database.db')
-    db = connection.cursor()
-    db.execute('SELECT * FROM movies WHERE id = (?)', (id, ))
-    connection.commit()
-    movie_data = db.fetchall()
-
-    #directors and writers
-    db.execute('SELECT directors, writers FROM producers WHERE id = ?', (id, ))
-    connection.commit()
-    directors_writers_ids = db.fetchall()
-    #directors = []
-    #writers = []
-    directors = person_details(directors_writers_ids[0][0])
-    writers = person_details(directors_writers_ids[0][1])
-   
-
-    if movie_data:
-        movie = {
-            'id': movie_data[0][0],
-            'title': movie_data[0][1],
-            'year': movie_data[0][2],
-            'genres': movie_data[0][3],
-            'people': people_in_movie(movie_data[0][0])
-        }
-        if exists(f'/home/gabriel/Documents/Final project/static/posters/{movie["id"]}.jpg'):
-            movie['poster'] = True
-        else:
-            movie['poster'] = False
-        people = people_in_movie(movie_data[0][0])
-        if people:
-            movie['people'] = people_in_movie(movie_data[0][0])
-        else:
-            movie['people'] = ''
-        
-        return movie
-    return False
+def next_year_movies(number):
+    return movies_per_year(2023, number)
 
 
 def people_in_movie(id):
@@ -201,29 +224,62 @@ def search_movies(movie):
 
     if ids:
         for id in ids:
-            movies.append(movie_details_less(id[0]))
+            movies.append(movie_details(id[0]))
 
         connection.close()
         return movies
     return None
 
+#Global variable
+content = {
+        'Previous Movies': get_movies,
+        'Movies Released in This Year': movies_per_year,
+        'Next Year Movies': next_year_movies
+    }
 
 def get_categories(number=10, categorie=None):
-    content = {
-        'Previous Movies': get_movies(number),
-        'Movies Released in This Year': movies_per_year(2022, number),
-        'Next Year Movies': movies_per_year(2023, number)
-    }
     if categorie:
-        movies = content[categorie]
-        content.clear()
+        movies = content[categorie](number=number)
         return movies
-    return content
+    else:
+        # content_defined = {
+        #     'Previous Movies': content['Previous Movies'](number),
+        #     'Movies Released in This Year': content['Movies Released in This Year'](2022, number),
+        #     'Next Year Movies': content['Next Year Movies'](number)
+        # }
+        content_defined = dict()
+        for key in content.keys():
+            content_defined[key] = content[key](number=number)
+        
+        return content_defined
 
+def movies_by_genre(genre):
+    """
+    Function to return movies by the genre \n
+    Parameters: genre: string \n
+    Return: List of dicts if success, false otherwise
+    """
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    query = f'SELECT id FROM movies WHERE genres LIKE "%{genre}%"'
+    
+    db.execute(query)
+    connection.commit()
+
+    data = db.fetchall()
+    if data:
+        movies = list()
+        for id in data:
+            movies.append(movie_details_less(id[0]))
+        
+        return movies
+
+    return False
+        
 
 def content_divider(content, number_items, part):
     """
-    Function to returd a part of a content \n
+    Function to return a part of a content \n
     Paremeters: number_items: nomber of each part will have, part: to return \n
     Return: list of items
     """
@@ -231,23 +287,27 @@ def content_divider(content, number_items, part):
         return content
     
     content_divided = list()
-
+    number_items_in_content = len(content)
     #index to insert in content divided
-    i = 0
 
-    number_of_parts = ceil(len(content)/number_items)
-    
-    for _ in range(number_of_parts):
-        content_divided.append(list())
+    number_of_parts = ceil(number_items_in_content/number_items)
+    if part > number_of_parts:
+        return False
 
-    for t, item in enumerate(content):
-        content_divided[i].append(item)
-        if (t+1) % number_items == 0:
-            i+=1
+    index = part*number_items
 
-    return content_divided[part]
-        
+    for _ in range(number_items):
+        content_divided.append(content[index])
+        index+=1
+
+        if index == number_items_in_content:
+            break
+            
+
+    return content_divided
 
 
 if __name__ == '__main__':
     pass
+
+

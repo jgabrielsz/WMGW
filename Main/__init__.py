@@ -15,12 +15,6 @@ def home():
     if session.get('id') is None:
         return redirect('/login')
 
-    # content = {
-    #     'Previous Movies': get_movies(10),
-    #     'Movies Released in This Year': movies_per_year(2022, 10),
-    #     'Next Year Movies': movies_per_year(2023, 10),
-    # }
-
     content = get_categories()
     # If the user is logged in show the homepage
     return render_template('home.html', content=content)
@@ -29,7 +23,7 @@ def home():
 @main_bp.route('/movie')
 def details():
     movie_id = request.args.get('id')
-    movie_data = movie_details(movie_id)
+    movie_data = movie_details_more(movie_id)
 
     return render_template('movie_details.html', movie=movie_data)
 
@@ -39,13 +33,12 @@ def show_more():
     categorie = request.args.get('categorie')
     part = int(request.args.get('part'))
     
+    movies_big = get_categories(categorie=categorie, number=3000)
+    movies = content_divider(movies_big, 30, part-1)
 
-    categ = get_categories(categorie=categorie, number=5000)
-    movies = content_divider(categ, 36, part-1)
+    max = ceil(len(movies_big)/30)
 
-    max = ceil(len(categ)/36)
-
-    return render_template('show_more.html', categorie=categorie, movies=movies, part=part, max=max)
+    return render_template('show.html', categorie=categorie, movies=movies, part=part, max=max, func='/show_more')
 
 
 @main_bp.route('/search')
@@ -62,3 +55,22 @@ def search():
 
         return render_template('search.html', search=search, movies=movies, part=part, max=max)
     return render_template('search.html')
+
+
+@main_bp.route('/more/')
+def more():
+    categorie = request.args.get('categorie')
+    part = request.args.get('part')
+    if part:
+        part = int(part)
+    else:
+        part = 1
+        
+    movies = movies_by_genre(categorie)
+
+    movies_divided = content_divider(movies, 36, part-1)
+
+    max= ceil(len(movies)/36)
+
+    return render_template('show.html', categorie=categorie, movies=movies_divided, part=part, max=max, func='/more/')
+    

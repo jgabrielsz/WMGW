@@ -3,17 +3,22 @@
 {% block navbar %}
         <ul class="navbar-nav ms-2">
             <li class="nav-link">
-                <a href="#" class="nav-link">Home</a>
+                <a href="/" class="nav-link">Home</a>
             </li>
             <li class="nav-link dropdown">
                 <a class="nav-link dropbtn">Genres</a>
                 <div class="dropdown-content text-start">
-                    <a href="#">Action</a>
-                    <a href="#">Adventure</a>
-                    <a href="#">Comedy</a>
-                    <a href="#">Drama</a>
-                    <a href="#">Fantasy</a>
-                    <a href="#">Horror</a>
+                    <a href="/more/?categorie=Action">Action</a>
+                    <a href="/more/?categorie=Animation">Animation</a>
+                    <a href="/more/?categorie=Biography">Biography</a>
+                    <a href="/more/?categorie=Comedy">Comedy</a>
+                    <a href="/more/?categorie=Crime">Crime</a>
+                    <a href="/more/?categorie=Drama">Drama</a>
+                    <a href="/more/?categorie=Fantasy">Fantasy</a>
+                    <a href="/more/?categorie=Horror">Horror</a>
+                    <a href="/more/?categorie=Romance">Romance</a>
+                    <a href="/more/?categorie=Sci-Fi">Sci-Fi</a>
+                    <a href="/more/?categorie=War">War</a>
                 </div>
             </li>
             <li class="nav-link">
@@ -22,7 +27,7 @@
         </ul>
     
         <form class="d-flex ms-auto" role="search" action="/search" method="get">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+            <input class="form-control me-2" type="search" placeholder="Search For a Movie" aria-label="Search" name="search">
             <input type="hidden" name="part" value="1">
             <button class="btn btn-outline-warning" type="submit">Search</button>
         </form>   

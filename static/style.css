@@ -1,10 +1,11 @@
 body { 
-    background: url("city-blured.jpg") no-repeat center center fixed; 
+    background: url("fire.jpg") no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 } 
+
 
 :root{
     --yellow-d: rgb(221, 163, 18);
@@ -28,8 +29,6 @@ body {
     /* border: 3px solid orange;  creates padding around scroll thumb */
   }
 
-
-
 .big-border {
     border-radius: 25px;
 }
@@ -51,12 +50,13 @@ body {
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard */
-    color:  var(--yellow-l);
-    padding-top: 6%;
+    color: var(--yellow-l);
+    padding-top: 1%;
     padding-left: 1%;
     font-weight: 600;
     text-shadow: 0.08em 0.08em #000
 }
+
 
 .container-movies{    
     z-index: 2;
@@ -74,8 +74,8 @@ body {
 .poster {
     z-index: 2;
     position: relative;
+    min-height: 240px;
     min-width: 170px;
-    height: 250px;
     box-sizing: border-box; 
     border-radius: 4px;
     margin-right: 3px;
@@ -162,10 +162,8 @@ body {
 }
 
 .details{
-    display: flex;
-    align-items: flex-start;
     color: #fff;
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .redeable .details{
@@ -276,6 +274,8 @@ body {
     width: auto;
     padding-right: 3%;
     padding-left: 10%;
+    display: flex;
+    justify-content: center;
 }
 
 .data-all{
@@ -294,3 +294,23 @@ body {
     justify-content: center;
     padding-top: 20px;
 }
+
+.alert_danger{
+    background-color: #430c11;
+    border-radius: 15px;
+    padding: 15px 2px;
+    color: #df7a83;
+    border: #6a111a solid 2px;
+    margin-bottom: 10px;
+}
+
+.alert_success{
+    background-color: #203d33;
+    border-radius: 15px;
+    padding: 15px 2px;
+    color: #cac5be;
+    border: #2e5845 solid 2px;
+    margin-bottom: 10px;
+}
+
+
