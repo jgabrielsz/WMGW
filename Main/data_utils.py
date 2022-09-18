@@ -1,10 +1,10 @@
 import sqlite3
-import movieposters as mp
 from math import ceil
 import imdb
 from time import time
 
 ia = imdb.IMDb()
+
 
 
 def movie_details_less(id):
@@ -52,8 +52,11 @@ def movie_details(id):
             'genres': movie_data[0][3]
         }
 
+        movie['genres'] = movie['genres'].replace(',', ', ')
+
         if movie['genres'] == r"\N":
             movie['genres'] = ''
+        
 
         return movie
         
@@ -145,7 +148,7 @@ def get_movies(number: int):
     if int(number) > 0:
         connection = sqlite3.connect('database.db')
         db = connection.cursor()
-        db.execute('SELECT id FROM movies LIMIT (?)', (number, ))
+        db.execute('SELECT id FROM movies ORDER BY title LIMIT (?)', (number, ))
         connection.commit()
         bigdata = db.fetchall()
         connection.close()
@@ -215,7 +218,7 @@ def search_movies(movie):
     """
     connection = sqlite3.connect('database.db')
     db = connection.cursor()
-    query = f"SELECT id FROM movies WHERE title LIKE '%{movie}%' LIMIT 5000"
+    query = f"SELECT id FROM movies WHERE title LIKE '%{movie}%' ORDER BY title LIMIT 5000"
 
     db.execute(query)
     connection.commit()
@@ -242,16 +245,12 @@ def get_categories(number=10, categorie=None):
         movies = content[categorie](number=number)
         return movies
     else:
-        # content_defined = {
-        #     'Previous Movies': content['Previous Movies'](number),
-        #     'Movies Released in This Year': content['Movies Released in This Year'](2022, number),
-        #     'Next Year Movies': content['Next Year Movies'](number)
-        # }
         content_defined = dict()
         for key in content.keys():
             content_defined[key] = content[key](number=number)
         
         return content_defined
+
 
 def movies_by_genre(genre):
     """
@@ -307,7 +306,22 @@ def content_divider(content, number_items, part):
     return content_divided
 
 
+def get_user_letter(id:int):
+    """
+    Get the first letter of the username by the id \n
+    Parameters: id string \n
+    Return: string with the letter
+    """
+    id = str(id)
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute('SELECT name FROM users WHERE id = ? LIMIT 1', (id, ))
+    connection.commit()
+    name = db.fetchall()
+    connection.close()
+    if name:
+        return name[0][0][0]
+    return False
+
 if __name__ == '__main__':
     pass
-
-

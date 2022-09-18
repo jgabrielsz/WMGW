@@ -1,0 +1,55 @@
+{% extends 'base_home.html' %}
+
+{% block content %}
+    <div class="user_area text-center big-border container-details">
+        <div class="user_logo">
+            {{letter}}
+        </div>
+        <h4 class="categorie py-2">{{username}}</h4>
+        
+        <a href="#" class="btn btn-outline-warning my-2">Change username</a>
+        <a id="myBtn" href="#" class="btn btn-outline-warning my-2">Delete Account</a>
+        <a href="/logout" class="btn btn-outline-warning my-2">Logout</a>
+
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+        
+            <!-- Modal content -->
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <p>Some text in the Modal..</p>
+            </div>
+        
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block script %}
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+{% endblock %}
+

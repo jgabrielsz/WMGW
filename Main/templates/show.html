@@ -8,10 +8,12 @@
     {% if movies %}
         <div class="container-movies-grid">
             {% for movie in movies %}
-                <a href="/movie?id={{movie['id']}}" class="poster">
-                    <img class="poster-img" src="../../static/posters/{{movie['id']}}.jpg" onerror="this.onerror=null; this.src='../../static/poster_not_found.jpg'" alt="poster">                
-                    <div class="title">{{movie['title']}}</div>
-                </a>
+                <div class="movie-box">
+                    <div class="poster" onclick="window.location='/movie?id={{movie.id}}'">
+                        <img src="../../static/posters/{{movie['id']}}.jpg" onerror="this.onerror=null; this.src='../../static/poster_not_found.jpg'" alt="poster">                
+                        <div class="title">{{movie['title']}}</div>
+                    </div>
+                </div>
             {% endfor %}
         </div>
 
@@ -25,7 +27,9 @@
                     </form>
                 {% endif %}
                 
-                <span class="text-warning px-2"><strong>Page {{part}} of {{max}}</strong></span>
+                {% if max > part %}
+                    <span class="text-warning px-2"><strong>Page {{part}} of {{max}}</strong></span>
+                {% endif %}
                 
                 {% if part != max %}
                     <form action="{{func}}" method="get">

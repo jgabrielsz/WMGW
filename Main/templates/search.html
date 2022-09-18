@@ -25,8 +25,9 @@
                     <button class="btn btn-warning" type="submit"><strong>&#60;</strong></button>
                 </form>
             {% endif %}
-    
-            <span class="text-warning px-2"><strong>Page {{part}} of {{max}}</strong></span>
+            {% if max > part %}    
+                <span class="text-warning px-2"><strong>Page {{part}} of {{max}}</strong></span>
+            {% endif %}
             
             {% if part != max %}
                 <form action="/search" method="get">

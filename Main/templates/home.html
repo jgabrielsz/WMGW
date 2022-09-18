@@ -18,23 +18,109 @@
         {% endfor %}
     {% endif %}
     {% endwith %}
+    <h1 class="d-none d-sm-block categorie text-center pt-0 ">2022 Oscars</h1>
+    <div class="oscars d-none d-sm-block mb-4">
+        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/coda.png" alt="..." onclick="window.location='/movie?id=tt10366460'">
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/belfast.png" alt="..." onclick="window.location='/movie?id=tt12789558'">
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/cruella.png" alt="..." onclick="window.location='/movie?id=tt3228774'">
+                </div>
+              </div>
+              <div class="carousel-item active" data-bs-interval="3000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/dont_look_up.png" alt="..." onclick="window.location='/movie?id=tt11286314'">
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/drive_my_car.png" alt="..." onclick="window.location='/movie?id=tt14039582'">
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/dune.png" alt="..." onclick="window.location='/movie?id=tt1160419'">
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/king_richard.png" alt="..." onclick="window.location='/movie?id=tt9620288'">
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/licorize_pizza.png" alt="..." onclick="window.location='/movie?id=tt11271038'">
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/nightmare_alley.png" alt="..." onclick="window.location='/movie?id=tt7740496'">
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/power_of_the_dog.png" alt="..." onclick="window.location='/movie?id=tt10293406'">
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/tick_tick_boom.png" alt="..." onclick="window.location='/movie?id=tt8721424'">
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="4000">
+                <div class="item">
+                    <img src="../../static/imgs/oscars/west_side_story.png" alt="..." onclick="window.location='/movie?id=tt3581652'">
+                </div>
+              </div>
+              
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
 
     <!-- Categories movies -->
     {% if content %}
-        {% for key in content %}
-            <h2 class="categorie text-start">{{key}}</h2>
-            <div class="container-movies">
-                {% for movie in content[key] %}
-                <a href="/movie?id={{movie['id']}}" class="poster">
-                    <img class="poster-img" src="../../static/posters/{{movie['id']}}.jpg" onerror="this.onerror=null; this.src='../../static/poster_not_found.jpg'" alt="">
-                    <div class="title">{{movie['title']}}</div>
-                </a>
-                {% endfor %}
-                <a class="show-more-btn" href="/show_more?categorie={{key}}&part=1">Show<br>More</a>
-            </div>
-            <br>
-        {% endfor %}
+            {% for key in content %}
+                <h2 class="categorie text-start">{{key}}</h2>    
+                <div class="container-movies">
+                    <div class="swiper mySwiper">
+                        <div class="swiper-wrapper">
+                            {% for movie in content[key] %}
+                                <div class="swiper-slide">
+                                    <div class="poster" onclick="window.location='/movie?id={{movie.id}}'">
+                                        <img src="../../static/posters/{{movie['id']}}.jpg" onerror="this.onerror=null; this.src='../../static/poster_not_found.jpg'" alt="">
+                                        <div class="title">{{movie['title']}}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>  
+                    </div>
+                    <a class="show-more-btn" href="/show_more?categorie={{key}}&part=1">Show<br>More</a>
+                </div>
+            {% endfor %}
     {% endif %}
+    
+
+
+    
+
     
 {% endblock %}
 

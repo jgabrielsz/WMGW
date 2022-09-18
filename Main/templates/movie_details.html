@@ -5,23 +5,20 @@
 {% endblock %}
 
 {% block content %}
-        <div id="container-details" class="container text-center text-white p-5 big-border transparent">
-            
+        <div id="container-details" class="container text-center text-white p-4 big-border transparent">
             <h2 class="categorie pb-3">Movie Details</h2>
-            <div class="row">
-                <span class="col-md-1"></span>
-                <div class="container text-center col-md-5 pb-4">
-                    <div class="poster_big d-flex">
-                        <img src="../../static/posters/{{movie['id']}}.jpg" onerror="this.onerror=null; this.src='../../static/poster_not_found.jpg'" alt="poster">
-                    </div>
+            <div class="flex-column flex-sm-row d-sm-flex aligh-items-center">
+                <div class="poster_big">
+                    <img src="../../static/posters/{{movie['id']}}.jpg" onerror="this.onerror=null; this.src='../../static/poster_not_found.jpg'" alt="poster">
                 </div>
+
                 <div class="container p-5 col-md-6 text-center text-md-start">
                     <h5 class="details">{{ movie['title']}}</h5>
                     <h5 class="details">{{ movie['year']}}</h5>
                     <h5 class="details">{{ movie['genres']}}</h5>
                     <span class="px-3"></span>
-                    <div class="details text-center justify-content-evenly d-sflex ">
-                        <div class="details">Movie Details: <br> {{ movie['title']}}</div>
+                    <div class="details text-center justify-content-sm-evenly d-sm-flex ">
+                        <div class="details">Movie Details: <br> {{ movie['title']}} <br> </div>
                         <div class="details">Release Year: <br> {{ movie['year']}}</div>
                     </div>
                     <div class="redeable text-start">

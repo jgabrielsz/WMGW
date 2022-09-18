@@ -1,9 +1,9 @@
-from unicodedata import category
 from flask import Blueprint, render_template, redirect, session, request
 from Main.data_utils import *
 
 main_bp = Blueprint('main', __name__, template_folder='templates', static_folder='.static')
 
+user_letter = ''
 
 @main_bp.route('/', methods=['GET', 'POST'])
 def home():
@@ -15,9 +15,12 @@ def home():
     if session.get('id') is None:
         return redirect('/login')
 
+    global user_letter
+    user_letter = get_user_letter(session.get('id'))
+
     content = get_categories()
     # If the user is logged in show the homepage
-    return render_template('home.html', content=content)
+    return render_template('home.html', content=content, letter=get_user_letter(session.get('id')))
 
 
 @main_bp.route('/movie')
@@ -25,7 +28,7 @@ def details():
     movie_id = request.args.get('id')
     movie_data = movie_details_more(movie_id)
 
-    return render_template('movie_details.html', movie=movie_data)
+    return render_template('movie_details.html', movie=movie_data, letter=user_letter)
 
 
 @main_bp.route('/show_more')
@@ -38,7 +41,7 @@ def show_more():
 
     max = ceil(len(movies_big)/30)
 
-    return render_template('show.html', categorie=categorie, movies=movies, part=part, max=max, func='/show_more')
+    return render_template('show.html', categorie=categorie, movies=movies, part=part, max=max, func='/show_more', letter=user_letter)
 
 
 @main_bp.route('/search')
@@ -53,7 +56,7 @@ def search():
 
         max = ceil(len(answer)/10)
 
-        return render_template('search.html', search=search, movies=movies, part=part, max=max)
+        return render_template('search.html', search=search, movies=movies, part=part, max=max, letter=user_letter)
     return render_template('search.html')
 
 
@@ -72,5 +75,10 @@ def more():
 
     max= ceil(len(movies)/36)
 
-    return render_template('show.html', categorie=categorie, movies=movies_divided, part=part, max=max, func='/more/')
+    return render_template('show.html', categorie=categorie, movies=movies_divided, part=part, max=max, func='/more/', letter=user_letter)
     
+
+
+
+
+
