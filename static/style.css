@@ -283,7 +283,7 @@ body {
 }
 
 .poster:hover .title{
-    height: 35%;
+    height: 35%; 
 }
 
 .show-more-btn{
@@ -312,7 +312,7 @@ body {
 
 .carousel-item .item{
     width: 100%;
-    height: 57vh;
+    height: 60vh;
     display: flex;
     justify-content: center;
     background-color: var(--dark-transparent);
@@ -328,7 +328,7 @@ body {
 .item img{
     display: block;
     height: auto;
-    max-height: 57vh;
+    max-height: 60vh;
     width: auto;
     max-width: 100%;
     transition-duration: 300ms;
@@ -343,10 +343,12 @@ body {
 .user_link{
     display: block;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    width: 4vw;
-    height: 4vw;
+    width: 6vh;
+    height: 6vh;
+    min-width: 40px;
+    min-height: 40px;
     color: #000;
-    font-size: 4vh;
+    font-size: max(25px, 4.1vh);
     text-align: center;
     text-decoration: none;
     font-weight: bold;
@@ -366,20 +368,35 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 70%;
+    width: 95%;
     margin: 0 auto;
     padding: 1% 1%;
     background-color: var(--dark-transparent);
     border:  var(--yellow-l) solid 3px;
 }
 
+@media (min-width: 768px){
+.user_area{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    margin: 0 auto;
+    padding: 1% 1%;
+    background-color: var(--dark-transparent);
+    border:  var(--yellow-l) solid 3px;
+}
+}
+
+
+
 .user_logo{
     display: block;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    width: 10vw;
-    height: 10vw;
+    width: 100px;
+    height: 100px;
+    font-size: 65px;
     color: #000;
-    font-size: 10vh;
     text-align: center;
     text-decoration: none;
     font-weight: bold;
@@ -387,45 +404,105 @@ body {
     margin-left: 1%;
     margin-right: 1%;
     border-radius: 50%;
-    transition-duration: 100ms;
     border: #000 solid 3px;
 }
 
 
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    -webkit-animation-name: fadeIn;
+    -webkit-animation-duration: 0.4s;
+    animation-name: fadeIn;
+    animation-duration: 0.4s
 }
 
 /* Modal Content/Box */
 .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    background-color: var(--dark-semitransparent);
+    margin: 25% auto; /* 15% from the top and centered */
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
+    border:  #dc3545 solid 3px;
+    width: 60%;
+    min-width: 310px;
+    -webkit-animation-name: slideIn;
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideIn;
+    animation-duration: 0.4s;
+    color: white;
+    font-weight: 400px;
+}
+
+.modal-content input{
+    width: 60%;
+    margin: 1% auto;
 }
 
 /* The Close Button */
 .close {
-    color: #aaa;
+    color: rgb(255, 255, 255);
     float: right;
     font-size: 28px;
     font-weight: bold;
+    transition-duration: 150ms;
 }
 
 .close:hover,
 .close:focus {
-    color: black;
+    color: rgb(104, 98, 98);
     text-decoration: none;
     cursor: pointer;
 }
 
+
+.modal-header {
+    padding: 2px 16px;
+    color: #ed4657;
+}
+
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+    from {top: -40vh; opacity: 0} 
+    to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+    from {top: -40vh; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+    from {opacity: 0} 
+    to {opacity: 1}
+}
+  
+@keyframes fadeIn {
+    from {opacity: 0} 
+    to {opacity: 1}
+}
+
+@keyframes slideLeft {
+    from {left: -40vh; opacity: 0}
+    to {right: 0; opacity: 1}
+}
+
+.change_username input{
+    width: 70%;
+    margin: auto 0;
+}
+
+
+#inp_changer{
+    display: none;
+    animation-name: slideLeft;
+    animation-duration: 0.5s;
+}

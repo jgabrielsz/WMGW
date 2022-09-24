@@ -1,4 +1,5 @@
 import sqlite3
+from Auth.login_utils import login_user, request_username
 
 
 
@@ -19,13 +20,16 @@ def name_in_database(name):
         return False
     return True
 
-def delete_user(name):
+def delete_user_db(name, password):
     """
     Function to delete a user from the database \n
     Parameters: name, password \n
     Return True if success, and False if not.
     """
     if name_in_database(name):
+        if not login_user(name, password):
+            return False
+            
         connection = sqlite3.connect('database.db')
         db = connection.cursor()
         db.execute("DELETE FROM users WHERE name = ?", [name])
@@ -33,11 +37,19 @@ def delete_user(name):
         connection.close()
         if not name_in_database(name):
             return True
-        return False
     return False
 
-def change_username():
-    ...
+def changer_username(new_username):
+    """
+    Function to change the username \n
+    Parameters: new_username \n
+    Return: True if success, false if not
+    """
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute('UPDATE users SET name = ?', (new_username, ))
+    connection.commit()
+    connection.close()
 
 def get_username(id:int):
     """
