@@ -6,7 +6,6 @@ from time import time
 ia = imdb.IMDb()
 
 
-
 def movie_details_less(id):
     """
     Get the movie data(just id, title and poster bool) \n

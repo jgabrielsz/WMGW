@@ -18,8 +18,22 @@
                     <h5 class="details">{{ movie['genres']}}</h5>
                     <span class="px-3"></span>
                     <div class="details text-center justify-content-sm-evenly d-sm-flex ">
-                        <div class="details">Movie Details: <br> {{ movie['title']}} <br> </div>
-                        <div class="details">Release Year: <br> {{ movie['year']}}</div>
+                        <div class="details">Directors:
+                            <br>
+                            {% for director in movie['directors'] %}
+                                {% if director %}
+                                    {{ director['name'] }} <br>
+                                {% endif %} 
+                            {% endfor %}
+                        </div>
+                        <div class="details">Writers:
+                            <br>
+                            {% for writer in movie['writers'] %}
+                                {% if writer %}
+                                    {{ writer['name'] }} <br>
+                                {% endif %} 
+                            {% endfor %}
+                        </div>
                     </div>
                     <div class="redeable text-start">
                         <br>
