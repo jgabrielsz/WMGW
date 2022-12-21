@@ -3,7 +3,7 @@
 {% block content %}
     {% if movies %}
         {% for movie in movies %}
-            <a href="/movie?id={{movie['id']}}" class="search-link">
+            <a href="/movie/{{movie['id']}}" class="search-link">
                 <div class="container big-border transparent mb-2 box-search">
                     <img src="../../static/posters/{{movie['id']}}.jpg" onerror="this.onerror=null; this.src='../../static/poster_not_found.jpg'" alt="Poster">
                     <div class="data-all">
@@ -13,7 +13,7 @@
                             <div>{{movie['genres']}}</div>
                         {% endif %}
                     </div>
-                </div>
+                </div> 
             </a>
 
         {% endfor %}
@@ -25,7 +25,7 @@
                     <button class="btn btn-warning" type="submit"><strong>&#60;</strong></button>
                 </form>
             {% endif %}
-            {% if max > part %}    
+            {% if max >= part %}    
                 <span class="text-warning px-2"><strong>Page {{part}} of {{max}}</strong></span>
             {% endif %}
             
@@ -38,7 +38,7 @@
             {% endif %}
         </div>
     {% else %}
-        <div class="categorie">No results for your search</div>
+        <div class="categorie mt-4"><h2><strong>No results for your search</strong></h2></div>
     {% endif %}
 {% endblock %}
 

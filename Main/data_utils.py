@@ -1,14 +1,14 @@
 import sqlite3
 from math import ceil
 import imdb
-from time import time
+from Auth.login_required import login_required
 
 ia = imdb.IMDb()
 
 
-def movie_details_less(id):
+def movie_details_less(id): 
     """
-    Get the movie data(just id, title and poster bool) \n
+    Get the movie data(just id and title) \n
     Parameters: id: string \n
     Return a dict with the data
     """
@@ -26,7 +26,33 @@ def movie_details_less(id):
             'id': movie_data[0][0],
             'title': movie_data[0][1]
         }
+    return False
 
+def movie_rating(id):
+    """
+    Get the movie rating\n
+    Parameters: id of movie: string\n
+    Return the rating
+    """
+    # Movies data
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute('SELECT averageRating FROM ratings WHERE id = (?)', (id, ))
+    connection.commit()
+    db_rating = db.fetchall()
+    connection.close()
+    
+    rating = [0 for _ in range(5)]
+
+    if db_rating:
+        db_rating = db_rating[0][0]
+        db_rating /= 2
+        db_rating = ceil(db_rating)
+
+        for i in range(int(db_rating)):
+            rating[i] = 1
+        
+    return rating
 
 def movie_details(id):
     """
@@ -41,7 +67,6 @@ def movie_details(id):
     connection.commit()
     movie_data = db.fetchall()
     connection.close()
-
 
     if movie_data:
         movie = {
@@ -61,7 +86,6 @@ def movie_details(id):
         
     return False
 
-
 def movie_details_more(id):
     """
     Get the movie data (id, title, year, genres, poster, directors, writers, people)
@@ -77,9 +101,8 @@ def movie_details_more(id):
     db.execute('SELECT directors, writers FROM producers WHERE id = ?', (id, ))
     connection.commit()
     directors_writers_ids = db.fetchall()
-    
-    directors = person_details(directors_writers_ids[0][0])
-    writers = person_details(directors_writers_ids[0][1])
+
+    directors, writers = person_details([directors_writers_ids[0][0],directors_writers_ids[0][1]])
 
     #If there is just one director or one writer put inside a list
     if type(directors) != list:
@@ -91,6 +114,8 @@ def movie_details_more(id):
         movie = movie_data.copy()
         
         try:
+            # Get movie plot if exists
+            
             m_id = movie['id'][2:]
             plot = ia.get_movie(m_id)
             movie['plot'] = plot['plot']
@@ -99,11 +124,20 @@ def movie_details_more(id):
 
         movie['directors'] = directors
         movie['writers'] = writers
+        movie['rating'] = movie_rating(id)
         
         
         return movie
     return False
 
+def get_id_from_name(name):
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute("SELECT id FROM users WHERE name = ?", [name, ])
+    connection.commit()
+    id = db.fetchall()[0][0]
+    connection.close()
+    return id       
 
 def person_details(id):
     """
@@ -111,31 +145,26 @@ def person_details(id):
     Parameters: person id: string \n
     Return: dict with data if success, and False otherwise
     """
-    if ',' in id:
+    if type(id) == list:
         list_ids = []
-        ids = id.split(',')
-        for i in ids:
+        for i in id:
             list_ids.append(person_details(i))
         return list_ids
 
-
     connection = sqlite3.connect('database.db')
     db = connection.cursor()
-    db.execute('SELECT * FROM people WHERE id = ?', (id, ))
+    db.execute('SELECT id,name FROM people WHERE id = ?', (id, ))
     connection.commit()
     person_bigdata = db.fetchall()
     connection.close()
-    #id         name         professions              knownForTitles
+    #id   name
     if person_bigdata:
         person_data = {
             'id': person_bigdata[0][0],
             'name': person_bigdata[0][1],
-            'professions': person_bigdata[0][2],
-            'knownForTitles': person_bigdata[0][3]
         }
         return person_data
     return False
-
 
 def get_movies(number: int):
     """
@@ -159,7 +188,6 @@ def get_movies(number: int):
         if data_movies:
             return data_movies
     return False
-
 
 def movies_per_year(year=2022, number=10):
     """
@@ -185,10 +213,8 @@ def movies_per_year(year=2022, number=10):
             return data_movies
     return False
 
-
 def next_year_movies(number):
     return movies_per_year(2023, number)
-
 
 def people_in_movie(id):
     """
@@ -207,7 +233,6 @@ def people_in_movie(id):
         if people_data:
             return people_data
     return False
-
 
 def search_movies(movie):
     """
@@ -232,25 +257,6 @@ def search_movies(movie):
         return movies
     return None
 
-#Global variable
-content = {
-        'Previous Movies': get_movies,
-        'Movies Released in This Year': movies_per_year,
-        'Next Year Movies': next_year_movies
-    }
-
-def get_categories(number=10, categorie=None):
-    if categorie:
-        movies = content[categorie](number=number)
-        return movies
-    else:
-        content_defined = dict()
-        for key in content.keys():
-            content_defined[key] = content[key](number=number)
-        
-        return content_defined
-
-
 def movies_by_genre(genre):
     """
     Function to return movies by the genre \n
@@ -274,7 +280,6 @@ def movies_by_genre(genre):
 
     return False
         
-
 def content_divider(content, number_items, part):
     """
     Function to return a part of a content \n
@@ -304,7 +309,7 @@ def content_divider(content, number_items, part):
 
     return content_divided
 
-
+@login_required
 def get_user_letter(id:int):
     """
     Get the first letter of the username by the id \n
@@ -322,5 +327,135 @@ def get_user_letter(id:int):
         return name[0][0][0]
     return False
 
+@login_required
+def check_movie_in_list(movie_id, user_id):
+    """
+    To check if the movie is already on user's list\n
+    Parameters: id of the movie, id of the user;\n
+    Return true or false
+    """
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute('SELECT list FROM users_lists WHERE id = ?', (user_id, ))
+    connection.commit()
+    list = db.fetchall()
+    connection.close()
+    if list[0][0]:
+        if movie_id in list[0][0]:
+            return True
+    return False
+
+@login_required
+def insert_into_users_list(movie_id, user_id):
+    """
+    Function to insert a movie in the user's list \n
+    Parameters: id of the user; id of the movie\n
+    return true if sucess
+    """
+    if not id or not movie_id:
+        return False
+    
+    if check_movie_in_list(movie_id, user_id):
+        return False
+
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute('UPDATE users_lists SET list = list||","||(?) WHERE id = ?', (movie_id, user_id))
+    connection.commit()
+    connection.close()
+    if check_movie_in_list(movie_id, user_id):
+        return True
+    return False
+
+@login_required
+def users_movies(user_id):
+    """
+    Function to return the user's movies\n
+    Parameters: id of the user: string\n
+    return true if success, and false otherwise
+    """    
+    user = get_user_letter(user_id)
+    if not user:
+        return False
+
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute('SELECT list FROM users_lists WHERE id = (?)', (user_id, ))
+    connection.commit()
+    data = db.fetchall()
+    connection.close()
+    
+    movies = data[0][0]
+
+    if movies:
+        movie_ids = movies.split(',')
+        data = list()
+        for id in movie_ids:
+            movie = movie_details_less(id)
+            if movie:
+                data.append(movie)
+        
+        return data
+
+    return False
+
+@login_required
+def remove_movie_to_list(movie_id, user_id):
+    """
+    Function to remove a movie from user list\n
+    Paremeters: id of the movie, id of the user\n
+    Return true if success, and false otherwise
+    """
+    if check_movie_in_list(movie_id, user_id):
+        user = get_user_letter(user_id)
+        if not user:
+            return False
+
+        connection = sqlite3.connect('database.db')
+        db = connection.cursor()
+        db.execute('SELECT list FROM users_lists WHERE id = (?)', (user_id, ))
+        connection.commit()
+        data = db.fetchall()
+        connection.close()
+
+        movies = data[0][0]
+        if movies:
+            movie_ids = movies.split(',')
+            print(movie_ids)
+            movie_ids.remove(movie_id)
+
+            movie_ids_string = ','.join(movie_ids)
+            
+            connection = sqlite3.connect('database.db')
+            db = connection.cursor()
+            db.execute('UPDATE users_lists SET list = ? WHERE id = ?', (movie_ids_string, user_id))
+            connection.commit()
+            connection.close()
+
+            if not check_movie_in_list(movie_id, user_id):
+                return True
+
+    return False
+
+
+#Global variable
+content = {
+        'Previous Movies': get_movies,
+        'Movies Released in This Year': movies_per_year,
+        'Next Year Movies': next_year_movies,
+    }
+
+def get_categories(number=10, categorie=None):
+    if categorie:
+        movies = content[categorie](number=number)
+        return movies
+    else:
+        content_defined = dict()
+        for key in content.keys():
+            content_defined[key] = content[key](number=number)
+        
+        return content_defined
+
+
 if __name__ == '__main__':
-    pass
+    print(movie_rating('tt0293429'))

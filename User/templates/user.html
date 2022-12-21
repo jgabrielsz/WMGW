@@ -1,15 +1,30 @@
 {% extends 'base_home.html' %}
 
 {% block content %}
+
+    <!-- messege -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="container w-50">
+                <div class="alert_success">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
     <div class="user_area text-center big-border container-details pt-3">
         <div class="user_logo">
             {{letter}}
         </div>
         <h4 class="categorie py-2">{{username}}</h4>
-        <div class="change_username d-flex justify-content-center">
-            <button class="btn btn-outline-warning my-2" onclick="document.getElementById('inp_changer').style.display = 'block'">Change username</button>
-            <form action="/change_username" method="post" class="d-flex justify-content-center w-70" >
-                <input id="inp_changer" class="form-control" type="text" name="username" placeholder="New Username">
+        <div class="change_username d-block d-sm-flex justify-content-center">
+                <button class="btn btn-outline-warning my-2" onclick="document.getElementById('f-rename').style.display = 'flex';">Change username</button>
+            <form id="f-rename" action="/change_username" method="post" class="justify-content-center w-70 position-relative" >
+                <input class="form-control" type="text" name="username" placeholder="New Username">
+                <button class="btn btn-outline-warning btn-rename">Rename</button>
             </form>
         </div>
         <a id="myBtn" href="#" class="btn btn-outline-warning my-2">Delete Account</a>

@@ -1,5 +1,6 @@
 import sqlite3
 from Auth.login_utils import login_user, request_username
+from flask import flash
 
 
 
@@ -11,45 +12,86 @@ def name_in_database(name):
     """
     connection = sqlite3.connect('database.db')
     db = connection.cursor()
-    db.execute("SELECT * FROM users WHERE name = ?", [name])
+    db.execute("SELECT id FROM users WHERE name = ?", [name])
     connection.commit()
     resp = db.fetchall()
     connection.close()
 
-    if len(resp) == 0:
-        return False
-    return True
+    if resp:
+        print('Tem')
+        return True
+    print('Não tem')
+    return False
 
-def delete_user_db(name, password):
+
+def id_by_name(user_name):
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute("SELECT id FROM users WHERE name = ?", [user_name])
+    connection.commit()
+    name = db.fetchall()
+    connection.close()
+
+    if name: 
+        return name
+    return False
+
+
+def delete_user_db(user_id, password):
     """
     Function to delete a user from the database \n
     Parameters: name, password \n
     Return True if success, and False if not.
     """
+    name = get_username(user_id)
     if name_in_database(name):
-        if not login_user(name, password):
-            return False
-            
-        connection = sqlite3.connect('database.db')
-        db = connection.cursor()
-        db.execute("DELETE FROM users WHERE name = ?", [name])
-        connection.commit()
-        connection.close()
-        if not name_in_database(name):
-            return True
-    return False
+        if login_user(name, password):
+            connection = sqlite3.connect('database.db')
+            db = connection.cursor()
+            db.execute('DELETE FROM users_lists WHERE id = ?', (user_id,))
+            connection.commit()
+            connection.close()
 
-def changer_username(new_username):
+            connection = sqlite3.connect('database.db')
+            db = connection.cursor()
+            db.execute('DELETE FROM users WHERE id = ?', (user_id,))
+            connection.commit()
+            connection.close()
+
+            if not name_in_database(get_username(user_id)):
+                print('Deleted')
+
+            return True
+        else:
+            flash('Password incorrect')
+            return False
+    else:
+        flash('username not in database')
+        return False
+        
+
+
+def changer_username(new_username,user_id):
     """
     Function to change the username \n
     Parameters: new_username \n
     Return: True if success, false if not
     """
-    connection = sqlite3.connect('database.db')
-    db = connection.cursor()
-    db.execute('UPDATE users SET name = ?', (new_username, ))
-    connection.commit()
-    connection.close()
+    if name_in_database(new_username):
+        flash('username already exists')
+        return
+    else:
+        connection = sqlite3.connect('database.db')
+        db = connection.cursor()
+        db.execute('UPDATE users SET name = ? WHERE id = ?', (new_username,user_id))
+        connection.commit()
+        connection.close()
+
+        if not name_in_database(new_username):
+            flash('Error')
+            return    
+    return
+
 
 def get_username(id:int):
     """
@@ -66,11 +108,11 @@ def get_username(id:int):
 
     connection.close()
 
-    if username[0]:
+    if username:
         return username[0][0]
     return False
 
 
 
 if __name__ == "__main__":
-    print(get_username(1))
+    pass
