@@ -166,6 +166,54 @@ def person_details(id):
         return person_data
     return False
 
+def popular_movies(number):
+    """
+    Get popular movies from the database \n
+    Parameters: number: int, not used at this point \n
+    Return: List of dicts if success, False if not
+    """
+    popular_movies = '("tt1630029","tt1488589","tt6443346","tt6710474", "tt1745960", "tt4729430", "tt1877830", "tt1464335", "tt1649418","tt3704428","tt14114802","tt11866324","tt8009428","tt1160419","tt17061910","tt7888964","tt8115900","tt7991608")'
+    query = f'SELECT * FROM movies WHERE id IN {popular_movies}'
+
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    db.execute(query)
+    connection.commit()
+    bigdata = db.fetchall()
+    connection.close()
+    data_movies = list()
+    
+    for data in bigdata:
+            data_movies.append(movie_details_less(data[0]))
+
+    if data_movies:
+        return data_movies
+
+    return False
+
+def most_watched_movies(number=25):
+    """
+    Function to return the most watched movies \n
+    Parameters: genre: string \n
+    Return: List of dicts if success, false otherwise
+    """
+    connection = sqlite3.connect('database.db')
+    db = connection.cursor()
+    query = f'SELECT movies.id, title FROM movies INNER JOIN ratings ON movies.id=ratings.id ORDER BY numVotes DESC LIMIT {number};'
+    
+    db.execute(query)
+    connection.commit()
+
+    data = db.fetchall()
+    if data:
+        movies = list()
+        for id in data:
+            movies.append(movie_details_less(id[0]))
+        
+        return movies
+
+    return False
+
 def get_movies(number: int):
     """
     Get movies data from the database \n
@@ -265,7 +313,7 @@ def movies_by_genre(genre):
     """
     connection = sqlite3.connect('database.db')
     db = connection.cursor()
-    query = f'SELECT id FROM movies WHERE genres LIKE "%{genre}%"'
+    query = f'SELECT movies.id FROM movies INNER JOIN ratings ON movies.id=ratings.id WHERE movies.genres LIKE "%{genre}%" ORDER BY numVotes DESC'
     
     db.execute(query)
     connection.commit()
@@ -440,16 +488,19 @@ def remove_movie_to_list(movie_id, user_id):
 
 #Global variable
 content = {
+        'Popular Movies': popular_movies,
+        'Most Watched Movies': most_watched_movies,
         'Previous Movies': get_movies,
-        'Movies Released in This Year': movies_per_year,
-        'Next Year Movies': next_year_movies,
+        'Movies Released in This Year': movies_per_year
     }
 
 def get_categories(number=10, categorie=None):
     if categorie:
+        #if categorie specified, return data about this categorie
         movies = content[categorie](number=number)
         return movies
     else:
+        #if not categorie specified, return all of them
         content_defined = dict()
         for key in content.keys():
             content_defined[key] = content[key](number=number)
@@ -458,4 +509,6 @@ def get_categories(number=10, categorie=None):
 
 
 if __name__ == '__main__':
-    print(movie_rating('tt0293429'))
+    print(popular_movies())
+
+

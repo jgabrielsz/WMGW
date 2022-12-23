@@ -318,6 +318,7 @@ body {
 }
 
 .poster:hover .title{
+    z-index: 4;
     opacity: 1;
     height: 33%;
 }
@@ -355,6 +356,7 @@ body {
 }
 
 .oscars{
+    position: relative;
     margin-left: -1%;
     margin-right: -1%;
     border-top: var(--yellow-l) solid 3px;
@@ -377,7 +379,7 @@ body {
     font-size: xx-large;
     z-index: 2;
     left: 0;
-    bottom: 35%;
+    bottom: 35px;
     background-color: var(--dark-transparent);
     width: 100%;
     padding: 12px 0;
