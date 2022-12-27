@@ -1,40 +1,37 @@
 # WMGW
- 
-WMGW é um projeto baseado na web que tem como objetivo ser uma biblioteca de filmes,
-que apesar de não ser possível assistir filmes no próprio site, o usuário pode descobrir
-facilmente qual o próximo filme que irá assistir, pois os filmes são divididos em várias
-categorias, facilitando assim a escolha do usuário. Também é possível adicionar filmes à 
-lista privada de filmes do usuário.
+WMGW is a web-based project that aims to be a movie library, that although it is not possible to watch
+movies on the site itself, the user can discover easily which movie you are going to watch next, as the 
+movies are divided into several categories, thus facilitating the user's choice. You can also add movies 
+to the User's private movie list.
 
-# Descrição
+# Description
 
-O projeto foi feito utilizando a linguagem python em conjunto com o framework flask, a 
-mesma ensinada no cs50, junto com html, css e javascript.
-Também foi feito uso de bootstrap para algumas estilizações do site, porém também escrevi
-várias propriedades css do zero para o site.
-Decidi usar uma funcionalidade da própria framework que são os blueprints, que como é explicado
-na documentação do flask, serve para particionar o projeto em diferentes pastas, além das pastas
-templates e static, para facilitar na organização do projeto. Usando essa funcionalidade a organização
-e desenvolvimento do projeto foi facilitada, que ficou com a seguinte organização das pastas:
-Auth, Main, User, templates e static.
+The project was made using the python language together with the flask framework, the same taught in cs50, 
+along with html, css and javascript. Bootstrap was also used for some site styling, but I also wrote various
+css properties from scratch for the website. 
+I decided to use a feature of the framework itself which are the blueprints, which as explained in the flask 
+documentation, serves to partition the project into different folders, in addition to the folders templates and
+static, to facilitate the organization of the project. Using this functionality the organization and project
+development was facilitated, with the following organization of folders:
+Auth, Main, User, templates and static.
 
-Na pasta Auth se encontram os arquivos relacionados à autenticação do usuário(que a propósito
-Nao é obrigatório para acesso ao site), Na pasta User estão os arquivos referentes ao usuário 
-que não incluem autenticação. E na pasta Main estão os arquivos referentes a todo o restante 
-Do site. Todas as três pastas possuem suas próprias pastas templates e static se necessário.
+The Auth folder contains files related to user authentication (which by the way
+It is not mandatory to access the site), In the User folder are the files referring to the user
+that do not include authentication. And in the Main folder are the files referring to everything else
+From the website. All three folders have their own templates and static folders if needed.
 
-OBS: Em alguns arquivos html é referenciado a pasta /static/posters, essa pasta não está no github
-pois nela estão os quase 65000 posters do site, por isso optei por não fazer o upload dessa pasta.
+NOTE: In some html files the /static/posters folder is referenced, this folder is not on github
+because it contains almost 65000 posters from the site, so I chose not to upload that folder.
 
-Decidi não usar uma API para esse projeto, pois ele não tem o objetivo de ser publicado, e sim ser uma
-possibilidade de aprendizado pondo a mão na massa em um projeto relativamente grande, e criar o banco 
-de dados e alimentá-lo do zero é algo bem mais desafiador do que usar uma API.
+I decided not to use an API for this project, as it is not intended to be published, but to be a
+possibility of learning by getting hands-on in a relatively large project, and creating the bank
+of data and feeding it from scratch is something much more challenging than using an API.
 
-Sobre o banco de dados do projeto
-O banco de dados desse projeto, com o nome database.db que é referenciado em alguns arquivos do projeto,
-trata-se de um banco de dados sqlite3 e não está no github devido ao seu tamanho. Ele foi criado e
-alimentado do zero, utilizando os dados do dataset do imdb. Ao rodar .schema no banco o resultado é o 
-seguinte:
+About the project database
+This project's database, named database.db which is referenced in some project files,
+this is a sqlite3 database and is not on github due to its size. He was created and
+powered from scratch, using data from the imdb dataset. When running .schema in the database the result is the
+Following:
 "CREATE TABLE people(id TEXT PRIMARY KEY, name TEXT NOT NULL, professions TEXT, knownForTitles TEXT);
 CREATE TABLE movies(id TEXT PRIMARY KEY, title TEXT NOT NULL, year INTEGER, genres TEXT);
 CREATE TABLE ratings(id INTEGER NOT NULL, averageRating REAL, numVotes INTEGER, FOREIGN KEY(id) REFERENCES movies(id));
@@ -42,58 +39,57 @@ CREATE TABLE producers(id TEXT NOT NULL, directors TEXT, writers TEXT);
 CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT NOT NULL, hash TEXT NOT NULL);
 CREATE TABLE users_lists(id INTEGER PRIMARY KEY, list TEXT);"
 
+Role of each project file
 
-Função de cada arquivo do projeto
-
-Arquivo app.py
-Arquivo responsável por interligar todos os blueprints do projeto, e também é o responsável por iniciar
-a aplicação. Todos os arquivos que retornam uma pagina para o usuário passam pelo app.py, e quando necessário
-ele manda uma requisição de um blueprint para outro. Sua outra função é armazenar dados no navegador do
-usuário, como por exemplo manter ele logado apos fechar e abrir o site.
+app.py file
+File responsible for interconnecting all blueprints of the project, and is also responsible for initiating
+the app. All files that return a page to the user go through app.py, and when necessary
+it sends a request from one blueprint to another. Its other function is to store data in the browser of the
+user, such as keeping him logged in after closing and opening the site.
 
 templates/base.html
-html base para todos os outros arquivos html do projeto, aqui são feitas as importações de scripts locais ou 
-externos, como o bootstrap por exemplo, aqui é escrito a base da aparencia do projeto como a navbar e a área 
-á ser alterada pelos demais arquivos html do projeto através de jinja templates.
+html base for all the other html files of the project, imports of local scripts or
+external sources, such as bootstrap for example, here is written the basis of the project's appearance such as the navbar and the area
+will be changed by the other html files of the project through jinja templates.
 
 static/style.css
-Arquivo css com todas as propriedades definidas localmente do site, todos os blueprints do projeto utilizam
-este arquivo css para estilizar as paginas, todo o espaçamento, efeitos hover e tamanhos das divs são 
-definidos aqui.
+css file with all properties defined locally from the site, all blueprints in the project use
+this css file for styling the pages, all the spacing, hover effects and sizes of the divs are
+defined here.
 
 static/Logo.png, Logo2.png, fire.jpg, poster_not_found.jpg
-Imagens usadas no projeto, Logo.png é a logo principal do projeto, Logo2.png é a mini-logo que aparece na aba do 
-navegador, fire.jpg é o plano de fundo do site, e poster_not_found.jpg é a imagem usada quando o filme não 
-possui poster.
+Images used in the project, Logo.png is the main logo of the project, Logo2.png is the mini-logo that appears in the
+browser, fire.jpg is the background of the site, and poster_not_found.jpg is the image used when the movie is not
+has poster.
 
 static/swiper.js, swiperAuto.js, usrModal.js
-Arquivos javascript para fazer os carroseis do site funcionarem, tanto o carrossel de oscars quanto os de 
-cada categoria
-na pagina principal.
+Javascript files to make the website carousels work, both the oscars carousel and the carousels
+each category
+on the main page.
 
 static/imgs/
-Pasta que contem as imagems que são mostradas no carrosel de oscars, em que cada imagem tem o nome do id 
-do filme a que ela se refere.
+Folder that contains the images that are shown in the oscars carousel, in which each image has the name of the id
+of the film to which it refers.
 
-O restante das pastas segue o seguinte padrão:
-Pasta_blueprint/__init__.py ,Pasta_blueprint/templates/, Pasta_blueprint/[nome da blueprint]_utils.py
+The rest of the folders follow this pattern:
+Folder_blueprint/__init__.py , Folder_blueprint/templates/, Folder_blueprint/[blueprint name]_utils.py
 
-__init__.py de cada pasta
-Arquivo principal de cada blueprint, onde a blueprint é definida, e onde as funções que retornam uma pagina 
-para o usuário são definidas. Para as funções presentes aqui funcionarem é necessário importar as funções 
-presentes em [nome da blueprint]_utils.py.
+__init__.py of each folder
+Main file of each blueprint, where the blueprint is defined, and where the functions that return a page
+for the user are defined. For the functions present here to work, it is necessary to import the functions
+present in [blueprint name]_utils.py.
 
-[nome da blueprint]_utils.py em cada pasta
-Arquivo onde as funções que realizam ou não alguma ação no banco de dados são definidas, todas as funções 
-presentes nesse arquivo não são executadas diretamente, e sim chamadas por __init__.py.
+[blueprint name]_utils.py in each folder
+File where functions that perform or not perform some action on the database are defined, all functions
+present in this file are not executed directly, but called by __init__.py.
 
-/templates/ de cada pasta
-Pasta onde ficam os arquivos .html de cada blueprint, onde alguns possuem um html chamado base_[nome da blueprint].html, 
-que funciona como o base.html do projeto, porém apenas para essa pagina, e ela também estende o que há em base.html.
+/templates/ from each folder
+Folder where the .html files of each blueprint are located, where some have an html called base_[blueprint name].html,
+which works like the project's base.html, but only for this page, and it also extends what's in base.html.
 
 *Auth/login_required.py
-Arquivo que possue a função para verificar se o usuário está logado, e caso não redirecionar para a pagina de login.
-Essa função é importada sempre que em algum ponto do projeto seja necessário o usuário estar logado.
+File that has the function to check if the user is logged in, and if not, redirect to the login page.
+This function is imported whenever, at some point in the project, the user needs to be logged in.
 
 
 
