@@ -35,18 +35,12 @@ O banco de dados desse projeto, com o nome database.db que é referenciado em al
 trata-se de um banco de dados sqlite3 e não está no github devido ao seu tamanho. Ele foi criado e
 alimentado do zero, utilizando os dados do dataset do imdb. Ao rodar .schema no banco o resultado é o 
 seguinte:
-"
-CREATE TABLE people(id TEXT PRIMARY KEY, name TEXT NOT NULL, professions TEXT, knownForTitles TEXT);
+"CREATE TABLE people(id TEXT PRIMARY KEY, name TEXT NOT NULL, professions TEXT, knownForTitles TEXT);
 CREATE TABLE movies(id TEXT PRIMARY KEY, title TEXT NOT NULL, year INTEGER, genres TEXT);
-CREATE TABLE ratings(
-  id INTEGER NOT NULL,
-  averageRating REAL, 
-  numVotes INTEGER,
-  FOREIGN KEY(id) REFERENCES movies(id));
+CREATE TABLE ratings(id INTEGER NOT NULL, averageRating REAL, numVotes INTEGER, FOREIGN KEY(id) REFERENCES movies(id));
 CREATE TABLE producers(id TEXT NOT NULL, directors TEXT, writers TEXT);
 CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT NOT NULL, hash TEXT NOT NULL);
-CREATE TABLE users_lists(id INTEGER PRIMARY KEY, list TEXT);
-"
+CREATE TABLE users_lists(id INTEGER PRIMARY KEY, list TEXT);"
 
 
 Função de cada arquivo do projeto
